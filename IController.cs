@@ -1,0 +1,40 @@
+﻿using System;
+
+namespace UI.NewGameFrame
+{
+    // public delegate void ViewCreatedCallback(IController controller, IView createdView);
+
+    public interface IController
+    {
+        bool InitSignal();
+
+        bool InitModel();
+
+        bool InitInteraction();
+
+        bool ReleaseSignal();
+
+        bool ReleaseModel();
+
+        bool ReleaseInteraction();
+
+        UnRegisterViewProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "");
+
+        void DropView(int viewID, bool isRoot);
+
+        bool IsExistView(int viewID);
+
+        bool IsViewShowed(int ViewID);
+
+        void ShowView(int viewID);
+
+        void HideView(int viewID);
+
+        void CallbackView(int viewID, Action<IController, IView> callback);
+
+        // void SetModelData<T>(string dataName, T dataValue, bool isLate);
+
+        void LateUpdateData();
+
+    }
+}
