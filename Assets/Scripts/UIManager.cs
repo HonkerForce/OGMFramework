@@ -2,11 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Base;
 using UnityEngine;
-using rkt;
-using rkt.Common;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
 namespace UI.NewGameFrame
@@ -30,7 +26,7 @@ namespace UI.NewGameFrame
             /// </summary>
             public WindowModel winModel;
 
-            public ResourceRef prefab;
+            public GameObject prefab;
             /// <summary>
             /// 关闭场景是否隐藏
             /// </summary>
@@ -46,7 +42,7 @@ namespace UI.NewGameFrame
         public class SonWindowNode
         {
             public WindowModel winModel;
-            public ResourceRef prefab;
+            public GameObject prefab;
             public string parentPath;
         }
 
@@ -54,50 +50,51 @@ namespace UI.NewGameFrame
 
         private const string uiConfigPath = "Assets/GResources/Config/UI/WindowAsyncCreateConfig.asset";
 
-        private EnumKeyDictionary<WindowModel, WindowModelConfig> winConfigs = new();
+        private Dictionary<WindowModel, WindowModelConfig> winConfigs = new();
         private GameObject winContainer = null;
 
         public bool InitConfig()
         {
-            AssetManager.LoadAsset<WindowAsyncCreateConfig>(uiConfigPath, modelConfig =>
-            {
-                if (winConfigs != null)
-                {
-                    for (int i = 0; i < modelConfig.WindowsModelConfig.Count; i++)
-                    {
-                        WindowModelConfig t = modelConfig.WindowsModelConfig[i];
-
-                        if (t.winModel != WindowModel.None)
-                        {
-                            if (winConfigs.ContainsKey(t.winModel))
-                            {
-                                TRACE.ErrorLn("UIManager.InitData error key=" + t.winModel);
-                                continue;
-                            }
-
-                            winConfigs.Add(t.winModel, t);
-                        }
-
-                        for (int j = 0; j < t.subNode.Count; j++)
-                        {
-                            WindowModel enSubWinModel = t.subNode[j].winModel;
-                            if (enSubWinModel != WindowModel.None)
-                            {
-                                if (winConfigs.ContainsKey(enSubWinModel))
-                                {
-                                    TRACE.ErrorLn(string.Format("UIManager.InitData sub error key={0} winModel={1}", enSubWinModel, t.winModel));
-                                    continue;
-                                }
-                                winConfigs.Add(enSubWinModel, t);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    TRACE.ErrorLn("==================Can not Find UI UIAsyncConfig===================");
-                }
-            }, true);
+            Resources.LoadAsync(uiConfigPath);
+            // AssetManager.LoadAsset<WindowAsyncCreateConfig>(uiConfigPath, modelConfig =>
+            // {
+            //     if (winConfigs != null)
+            //     {
+            //         for (int i = 0; i < modelConfig.WindowsModelConfig.Count; i++)
+            //         {
+            //             WindowModelConfig t = modelConfig.WindowsModelConfig[i];
+            //
+            //             if (t.winModel != WindowModel.None)
+            //             {
+            //                 if (winConfigs.ContainsKey(t.winModel))
+            //                 {
+            //                     TRACE.ErrorLn("UIManager.InitData error key=" + t.winModel);
+            //                     continue;
+            //                 }
+            //
+            //                 winConfigs.Add(t.winModel, t);
+            //             }
+            //
+            //             for (int j = 0; j < t.subNode.Count; j++)
+            //             {
+            //                 WindowModel enSubWinModel = t.subNode[j].winModel;
+            //                 if (enSubWinModel != WindowModel.None)
+            //                 {
+            //                     if (winConfigs.ContainsKey(enSubWinModel))
+            //                     {
+            //                         TRACE.ErrorLn(string.Format("UIManager.InitData sub error key={0} winModel={1}", enSubWinModel, t.winModel));
+            //                         continue;
+            //                     }
+            //                     winConfigs.Add(enSubWinModel, t);
+            //                 }
+            //             }
+            //         }
+            //     }
+            //     else
+            //     {
+            //         TRACE.ErrorLn("==================Can not Find UI UIAsyncConfig===================");
+            //     }
+            // }, true);
 
             if (winContainer == null)
             {
@@ -230,12 +227,12 @@ namespace UI.NewGameFrame
         public void AsyncCreateWindow(WindowModel winModel, Action<IController, IView> callback)
         {
             //倒计时五秒退出到选角或者登录，不可以做任何操作/
-            if ((GlobalGame.Instance.GameClient.IsRequestEnterState(GameState.SelectActor) ||
-                 GlobalGame.Instance.GameClient.IsRequestEnterState(GameState.Login))
-                && winModel != WindowModel.NotificationActorUnder)
-            {
-                return;
-            }
+            // if ((GlobalGame.Instance.GameClient.IsRequestEnterState(GameState.SelectActor) ||
+            //      GlobalGame.Instance.GameClient.IsRequestEnterState(GameState.Login))
+            //     && winModel != WindowModel.NotificationActorUnder)
+            // {
+            //     return;
+            // }
 
             WindowModelConfig config = null;
             if (!winConfigs.TryGetValue(winModel, out config))
@@ -251,7 +248,7 @@ namespace UI.NewGameFrame
 
             if (!controller.IsExistView((int)config.winModel) || !controller.IsExistView((int)winModel))
             {
-                ZSpawnPool.Instance.StartCoroutine(AsyncCreateWindow(config, (int)winModel, callback));
+                // ZSpawnPool.Instance.StartCoroutine(AsyncCreateWindow(config, (int)winModel, callback));
                 return;
             }
 
@@ -275,29 +272,29 @@ namespace UI.NewGameFrame
                 yield break;
             }
 
-            AsyncOperationHandle<GameObject> winAssetReq = default;
-            if (!controller.IsExistView((int)config.winModel))
-            {
-                winAssetReq = AssetManager.LoadAsset<GameObject>(config.prefab.path);
-            }
-
-            while (!winAssetReq.IsDone)
-            {
-                yield return winAssetReq;
-            }
-
-            if (winAssetReq.Result != null)
-            {
-                GameObject prefabObj = GameObject.Instantiate(winAssetReq.Result);
-                UIView view = prefabObj.GetComponent<UIView>();
-                if (prefabObj != null && winContainer != null && view != null)
-                {
-                    prefabObj.transform.SetParent(winContainer.transform);
-                    controller.ControlView((int)config.winModel, view, true).UnRegisterViewWhenViewDestroyed();
-                }
-
-                winAssetReq = default;
-            }
+            // AsyncOperationHandle<GameObject> winAssetReq = default;
+            // if (!controller.IsExistView((int)config.winModel))
+            // {
+            //     winAssetReq = AssetManager.LoadAsset<GameObject>(config.prefab.path);
+            // }
+            //
+            // while (!winAssetReq.IsDone)
+            // {
+            //     yield return winAssetReq;
+            // }
+            //
+            // if (winAssetReq.Result != null)
+            // {
+            //     GameObject prefabObj = GameObject.Instantiate(winAssetReq.Result);
+            //     UIView view = prefabObj.GetComponent<UIView>();
+            //     if (prefabObj != null && winContainer != null && view != null)
+            //     {
+            //         prefabObj.transform.SetParent(winContainer.transform);
+            //         controller.ControlView((int)config.winModel, view, true).UnRegisterViewWhenViewDestroyed();
+            //     }
+            //
+            //     winAssetReq = default;
+            // }
 
             if (showViewID == (int)config.winModel)
             {
@@ -312,27 +309,27 @@ namespace UI.NewGameFrame
                     continue;
                 }
 
-                winAssetReq = AssetManager.LoadAsset<GameObject>(node.prefab.path);
-                while (!winAssetReq.IsDone)
-                {
-                    yield return winAssetReq;
-                }
-
-                if (winAssetReq.Result != null)
-                {
-                    GameObject subWinObj = GameObject.Instantiate(winAssetReq.Result);
-                    UIView view = subWinObj.GetComponent<UIView>();
-                    if (subWinObj != null && view != null)
-                    {
-                        controller.ControlView((int)node.winModel, view, false, node.parentPath).UnRegisterViewWhenViewDestroyed();
-                        if ((int)node.winModel == showViewID)
-                        {
-                            controller.CallbackView(showViewID, callback);
-                        }
-                    }
-
-                    winAssetReq = default;
-                }
+                // winAssetReq = AssetManager.LoadAsset<GameObject>(node.prefab.path);
+                // while (!winAssetReq.IsDone)
+                // {
+                //     yield return winAssetReq;
+                // }
+                //
+                // if (winAssetReq.Result != null)
+                // {
+                //     GameObject subWinObj = GameObject.Instantiate(winAssetReq.Result);
+                //     UIView view = subWinObj.GetComponent<UIView>();
+                //     if (subWinObj != null && view != null)
+                //     {
+                //         controller.ControlView((int)node.winModel, view, false, node.parentPath).UnRegisterViewWhenViewDestroyed();
+                //         if ((int)node.winModel == showViewID)
+                //         {
+                //             controller.CallbackView(showViewID, callback);
+                //         }
+                //     }
+                //
+                //     winAssetReq = default;
+                // }
             }
 
             controller.LateUpdateData();

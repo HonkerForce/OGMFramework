@@ -1,5 +1,4 @@
 ﻿using System;
-using rkt.Common;
 using UnityEngine;
 
 namespace UI.NewGameFrame

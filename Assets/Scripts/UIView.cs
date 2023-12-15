@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using rkt.Common;
 using UnityEngine;
 
 namespace UI.NewGameFrame
@@ -13,7 +12,7 @@ namespace UI.NewGameFrame
 
         protected Canvas m_Canvas = null;
 
-        public abstract Window_Sorting WinSorting { get; set; }
+        // public abstract Window_Sorting WinSorting { get; set; }
         //特效附加层
         protected const int m_effectAppendOrder = 4;
 
@@ -39,10 +38,10 @@ namespace UI.NewGameFrame
 
         public override bool IsCreateSuc()
         {
-            return base.IsCreateSuc() && 
-                   helper != null && 
-                   curWinID != WindowModel.None && 
-                   WinSorting != Window_Sorting.None;
+            return base.IsCreateSuc() &&
+                   helper != null &&
+                   curWinID != WindowModel.None; //&& 
+            // WinSorting != Window_Sorting.None;
         }
 
         public sealed override void Show()
@@ -70,7 +69,7 @@ namespace UI.NewGameFrame
         public void ResetCanvasSorting(int idx)
         {
             //只有定义为window层才需要自动排序
-            if (WinSorting != Window_Sorting.Window) return;
+            // if (WinSorting != Window_Sorting.Window) return;
     
             if (m_Canvas == null)
             {
@@ -81,7 +80,7 @@ namespace UI.NewGameFrame
     
             if (m_Canvas.overrideSorting)
             {
-                m_Canvas.sortingOrder = (int)Window_Sorting.Window + (40 * idx);
+                // m_Canvas.sortingOrder = (int)Window_Sorting.Window + (40 * idx);
                 //Debug.Log(gameObject.name + "   " + m_Canvas.sortingOrder);
             }
 
@@ -110,16 +109,16 @@ namespace UI.NewGameFrame
                     tmp.sortingOrder = m_Canvas.sortingOrder + (m_effectAppendOrder * i + 1);
             }
     
-            IOrderInLayerListener[] tmpOrderInLayer = GetComponentsInChildren<IOrderInLayerListener>(true);
+            // IOrderInLayerListener[] tmpOrderInLayer = GetComponentsInChildren<IOrderInLayerListener>(true);
+            //
+            // IOrderInLayerListener tmpO = null;
     
-            IOrderInLayerListener tmpO = null;
-    
-            for (int i = 0; i < tmpOrderInLayer.Length; i++)
-            {
-                tmpO = tmpOrderInLayer[i];
-    
-                tmpO.OrderInLayerChange();
-            }
+            // for (int i = 0; i < tmpOrderInLayer.Length; i++)
+            // {
+            //     tmpO = tmpOrderInLayer[i];
+            //
+            //     tmpO.OrderInLayerChange();
+            // }
     
             #endregion
         }
@@ -148,16 +147,16 @@ namespace UI.NewGameFrame
                     tmp.sortingOrder = parent.sortingOrder + (m_effectAppendOrder * i + m_effectAppendOrder);
             }
 
-            IOrderInLayerListener[] tmpOrderInLayer = GetComponentsInChildren<IOrderInLayerListener>(true);
-
-            IOrderInLayerListener tmpO = null;
-
-            for (int i = 0; i < tmpOrderInLayer.Length; i++)
-            {
-                tmpO = tmpOrderInLayer[i];
-
-                tmpO.OrderInLayerChange();
-            }
+            // IOrderInLayerListener[] tmpOrderInLayer = GetComponentsInChildren<IOrderInLayerListener>(true);
+            //
+            // IOrderInLayerListener tmpO = null;
+            //
+            // for (int i = 0; i < tmpOrderInLayer.Length; i++)
+            // {
+            //     tmpO = tmpOrderInLayer[i];
+            //
+            //     tmpO.OrderInLayerChange();
+            // }
 
             #endregion
         }
