@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     public class ReadOnlyData<T> where T : class
     {

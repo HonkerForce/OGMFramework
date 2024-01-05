@@ -1,4 +1,4 @@
-﻿namespace UI.NewGameFrame
+﻿namespace YFramework
 {
     public class UnRegisterViewProxy
     {

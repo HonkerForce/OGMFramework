@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     // public delegate bool SignalCallBack(Object context);
 
@@ -12,5 +12,7 @@ namespace UI.NewGameFrame
         void UnRegisterSignal(int signal, int srcType, int srcKey, Func<System.Object, bool> callBack);
 
         bool TriggerSignal(int signal, int srcType, int srcKey, Object context);
+
+        bool TriggerDelaySignal(int signal, int srcType, int srcKey, int delay, Object context);
     }
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     public abstract class Model : ModelBase
     {

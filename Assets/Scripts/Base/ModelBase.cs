@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     public abstract class ModelBase : IModel
     {

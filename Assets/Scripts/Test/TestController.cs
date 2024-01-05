@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
 	public class TestController : IController
 	{

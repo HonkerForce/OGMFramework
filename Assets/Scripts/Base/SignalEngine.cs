@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = System.Object;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     public class SignalEngine : ISignalEngine
     {
@@ -15,6 +15,16 @@ namespace UI.NewGameFrame
         }
         
         protected Dictionary<UInt64, Func<System.Object, bool>> signalDelegates = new();
+
+        protected struct SignalNode
+        {
+            public UInt64 key;
+            public int delay;
+            public int time;
+            public object[] args;
+        }
+
+        protected List<SignalNode> delaySignals = new();
         
         public virtual void RegisterSignal(int signal, int srcType, int srcKey, Func<System.Object, bool> callback)
         {
@@ -104,7 +114,62 @@ namespace UI.NewGameFrame
 
             return true;
         }
-        
+
+        public virtual bool TriggerDelaySignal(int signal, int srcType, int srcKey, int delay, object context)
+        {
+            if (signal <= 0 || srcType < 0 || srcKey < 0)
+            {
+                return false;
+            }
+
+            if (srcType == (int)SIGNAL_SRC_TYPE.SRC_TYPE_NONE)
+            {
+                for (int i = (int)SIGNAL_SRC_TYPE.SRC_TYPE_SYSTEM; i < (int)SIGNAL_SRC_TYPE.SRC_TYPE_MAX; ++i)
+                {
+                    UInt64 key = GenericSignalKey(signal, i, srcKey);
+                    if (key == 0)
+                    {
+                        continue;
+                    }
+                    
+                    if (!signalDelegates.ContainsKey(key))
+                    {
+                        continue;
+                    }
+
+                    SignalNode node = new()
+                    {
+                        key = key,
+                        delay = delay,
+                        time = (int)(Time.realtimeSinceStartup * 1000),
+                        args = new[] { context }
+                    };
+                    
+                    delaySignals?.Add(node);
+                }
+            }
+            else
+            {
+                UInt64 key = GenericSignalKey(signal, srcType, srcKey);
+                if (key == 0)
+                {
+                    return false;
+                }
+
+                SignalNode node = new()
+                {
+                    key = key,
+                    delay = delay,
+                    time = (int)(Time.realtimeSinceStartup * 1000),
+                    args = new[] { context }
+                };
+                    
+                delaySignals?.Add(node);
+            }
+
+            return true;
+        }
+
         protected bool TriggerSignal(UInt64 key, Object context)
         {
             var delegates = signalDelegates[key]?.GetInvocationList();

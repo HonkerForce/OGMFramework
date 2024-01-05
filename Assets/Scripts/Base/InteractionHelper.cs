@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     public class InteractionHelper : IHelper
     {

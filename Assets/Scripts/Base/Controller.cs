@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     
     public abstract class Controller<ModelClass> : IController where ModelClass : IModel

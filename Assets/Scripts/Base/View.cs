@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UI.NewGameFrame
+namespace YFramework
 {
     public abstract class View : MonoBehaviour, IView
     {
