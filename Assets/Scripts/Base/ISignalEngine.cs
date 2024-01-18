@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace YFramework
+namespace OGMFramework
 {
     // public delegate bool SignalCallBack(Object context);
 
     public interface ISignalEngine
     {
-        void RegisterSignal(int signal, int srcType, int srcKey, Func<System.Object, bool> callback);
+        void RegisterSignal(int signal, Func<System.Object, bool> callback);
 
-        void UnRegisterSignal(int signal, int srcType, int srcKey, Func<System.Object, bool> callBack);
+        void UnRegisterSignal(int signal, Func<System.Object, bool> callBack);
 
-        bool TriggerSignal(int signal, int srcType, int srcKey, Object context);
-
-        bool TriggerDelaySignal(int signal, int srcType, int srcKey, int delay, Object context);
+        bool TriggerSignal(int signal, System.Object context);
     }
 }

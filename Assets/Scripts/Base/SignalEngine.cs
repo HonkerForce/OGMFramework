@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Object = System.Object;
 
-namespace YFramework
+namespace OGMFramework
 {
     public class SignalEngine : ISignalEngine
     {
@@ -14,7 +13,7 @@ namespace YFramework
             SRC_TYPE_MAX
         }
         
-        protected Dictionary<UInt64, Func<System.Object, bool>> signalDelegates = new();
+        protected Dictionary<int, Func<System.Object, bool>> signalDelegates = new();
 
         protected struct SignalNode
         {
@@ -26,153 +25,47 @@ namespace YFramework
 
         protected List<SignalNode> delaySignals = new();
         
-        public virtual void RegisterSignal(int signal, int srcType, int srcKey, Func<System.Object, bool> callback)
+        public virtual void RegisterSignal(int signal, Func<System.Object, bool> callback)
         {
-            UInt64 key = GenericSignalKey(signal, srcType, srcKey);
-            if (key == 0)
+            if (signalDelegates.ContainsKey(signal))
             {
-                Debug.LogError(string.Format($"生成唯一key={key}，注册信号失败，signal={signal} srcType={srcType} srcKey={srcKey}"));
-                return;
-            }
-
-            if (signalDelegates.ContainsKey(key))
-            {
-                signalDelegates[key] += callback;
+                signalDelegates[signal] += callback;
             }
             else
             {
-                signalDelegates.Add(key, callback);
+                signalDelegates.Add(signal, callback);
             }
         }
 
-        public virtual void UnRegisterSignal(int signal, int srcType, int srcKey, Func<System.Object, bool> callBack)
+        public virtual void UnRegisterSignal(int signal, Func<System.Object, bool> callBack)
         {
-            UInt64 key = GenericSignalKey(signal, srcType, srcKey);
-            if (key == 0)
+            if (!signalDelegates.ContainsKey(signal))
             {
-                Debug.LogError(string.Format($"生成唯一key={key}，注销信号失败，signal={signal} srcType={srcType} srcKey={srcKey}"));
+                Debug.LogError(string.Format($"未知信号请求注销，注销信号失败，signal={signal}"));
                 return;
             }
 
-            if (!signalDelegates.ContainsKey(key))
+            signalDelegates[signal] -= callBack;
+            if (signalDelegates[signal].GetInvocationList().Length == 0)
             {
-                Debug.LogError(string.Format($"未知信号请求注销，注销信号失败，signal={signal} srcType={srcType} srcKey={srcKey}"));
-                return;
-            }
-
-            signalDelegates[key] -= callBack;
-            if (signalDelegates[key].GetInvocationList().Length == 0)
-            {
-                signalDelegates.Remove(key);
+                signalDelegates.Remove(signal);
             }
         }
 
-        public virtual bool TriggerSignal(int signal, int srcType, int srcKey, Object context)
+        public virtual bool TriggerSignal(int signal, System.Object context)
         {
-            if (signal <= 0 || srcType < 0 || srcKey < 0)
+            if (signal <= 0)
             {
                 return false;
             }
 
-            if (srcType == (int)SIGNAL_SRC_TYPE.SRC_TYPE_NONE)
+            if (!signalDelegates.ContainsKey(signal))
             {
-                for (int i = (int)SIGNAL_SRC_TYPE.SRC_TYPE_SYSTEM; i < (int)SIGNAL_SRC_TYPE.SRC_TYPE_MAX; ++i)
-                {
-                    UInt64 key = GenericSignalKey(signal, i, srcKey);
-                    if (key == 0)
-                    {
-                        continue;
-                    }
-                    
-                    if (!signalDelegates.ContainsKey(key))
-                    {
-                        continue;
-                    }
-
-                    if (!TriggerSignal(key, context))
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                UInt64 key = GenericSignalKey(signal, srcType, srcKey);
-                if (key == 0)
-                {
-                    return false;
-                }
-
-                if (!signalDelegates.ContainsKey(key))
-                {
-                    Debug.LogError(string.Format($"未知信号被触发，signal={signal} srcType={srcType} srcKey={srcKey}"));
-                    return false;
-                }
-
-                return TriggerSignal(key, context);
-            }
-
-            return true;
-        }
-
-        public virtual bool TriggerDelaySignal(int signal, int srcType, int srcKey, int delay, object context)
-        {
-            if (signal <= 0 || srcType < 0 || srcKey < 0)
-            {
+                Debug.LogError(string.Format($"未知信号被触发，signal={signal}"));
                 return false;
             }
 
-            if (srcType == (int)SIGNAL_SRC_TYPE.SRC_TYPE_NONE)
-            {
-                for (int i = (int)SIGNAL_SRC_TYPE.SRC_TYPE_SYSTEM; i < (int)SIGNAL_SRC_TYPE.SRC_TYPE_MAX; ++i)
-                {
-                    UInt64 key = GenericSignalKey(signal, i, srcKey);
-                    if (key == 0)
-                    {
-                        continue;
-                    }
-                    
-                    if (!signalDelegates.ContainsKey(key))
-                    {
-                        continue;
-                    }
-
-                    SignalNode node = new()
-                    {
-                        key = key,
-                        delay = delay,
-                        time = (int)(Time.realtimeSinceStartup * 1000),
-                        args = new[] { context }
-                    };
-                    
-                    delaySignals?.Add(node);
-                }
-            }
-            else
-            {
-                UInt64 key = GenericSignalKey(signal, srcType, srcKey);
-                if (key == 0)
-                {
-                    return false;
-                }
-
-                SignalNode node = new()
-                {
-                    key = key,
-                    delay = delay,
-                    time = (int)(Time.realtimeSinceStartup * 1000),
-                    args = new[] { context }
-                };
-                    
-                delaySignals?.Add(node);
-            }
-
-            return true;
-        }
-
-        protected bool TriggerSignal(UInt64 key, Object context)
-        {
-            var delegates = signalDelegates[key]?.GetInvocationList();
+            var delegates = signalDelegates[signal]?.GetInvocationList();
             foreach (Func<System.Object, bool> dele in delegates)
             {
                 if (!dele.Invoke(context))
@@ -182,27 +75,6 @@ namespace YFramework
             }
 
             return true;
-        }
-
-        protected virtual UInt64 GenericSignalKey(int signal, int srcType, int srcKey)
-        {
-            UInt64 key = 0;
-
-            if (signal <= 0 || srcType < 0 || srcKey < 0)
-            {
-                return key;
-            }
-
-            if (srcType >= (1 << 16) || srcKey >= (1 << 16))
-            {
-                return key;
-            }
-
-            key = (uint)signal << 32;
-            key |= (uint)srcType << 16;
-            key |= (uint)srcKey;
-
-            return key;
         }
     }
 }

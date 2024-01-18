@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace YFramework
+namespace OGMFramework
 {
     public class InteractionHelper : IHelper
     {

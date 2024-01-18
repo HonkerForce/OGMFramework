@@ -1,4 +1,4 @@
-﻿namespace YFramework
+﻿namespace OGMFramework
 {
     public class UnRegisterViewProxy
     {

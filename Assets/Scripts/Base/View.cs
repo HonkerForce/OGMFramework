@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace YFramework
+namespace OGMFramework
 {
     public abstract class View : MonoBehaviour, IView
     {

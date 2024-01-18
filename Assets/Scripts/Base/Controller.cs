@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YFramework
+namespace OGMFramework
 {
-    
-    public abstract class Controller<ModelClass> : IController where ModelClass : IModel
+    public abstract class Controller<ModelClass> : IController where ModelClass : ModelBase, new()
     {
         protected Dictionary<int, IView> allViews = new Dictionary<int, IView>();
 
         protected int rootViewID = 0;
 
-        protected ISignalEngine signalEngine;
+        protected ICommandEngine commandEngine;
 
-        protected abstract IHelper interactionHelper { get; }
+        protected virtual ISignalEngine signalEngine { get; } = new SignalEngine();
 
-        protected abstract ModelClass model { get; }
+        protected virtual IHelper interactionHelper { get; } = new InteractionHelper();
 
-        public Controller(ISignalEngine signalEngine)
+        protected virtual ModelClass model { get; } = new();
+
+        public Controller(ICommandEngine commandEngine)
         {
-            this.signalEngine = signalEngine;
+            this.commandEngine = commandEngine;
         }
 
         public abstract bool InitSignal();

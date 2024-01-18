@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace YFramework
+namespace OGMFramework
 {
     public class ReadOnlyData<T> where T : class
     {

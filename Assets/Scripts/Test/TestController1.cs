@@ -1,80 +1,80 @@
 ﻿using System;
 
-namespace YFramework
+namespace OGMFramework
 {
-	public class TestController1 : IController
+	public class TestController1 : Controller<TestModel1>
 	{
-		public TestController1(ISignalEngine engine)
+		public TestController1(ICommandEngine engine) : base(engine)
 		{
 			
 		}
 
-		public bool InitSignal()
+		public override bool InitSignal()
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool InitModel()
+		public override bool InitModel()
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool InitInteraction()
+		public override bool InitInteraction()
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool ReleaseSignal()
+		public override bool ReleaseSignal()
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool ReleaseModel()
+		public override bool ReleaseModel()
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool ReleaseInteraction()
+		public override bool ReleaseInteraction()
 		{
 			throw new NotImplementedException();
 		}
 
-		public UnRegisterViewProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "")
+		public override UnRegisterViewProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "")
 		{
 			throw new NotImplementedException();
 		}
 
-		public void DropView(int viewID, bool isRoot)
+		public override void DropView(int viewID, bool isRoot)
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool IsExistView(int viewID)
+		public override bool IsExistView(int viewID)
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool IsViewShowed(int ViewID)
+		public override bool IsViewShowed(int ViewID)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void ShowView(int viewID)
+		public override void ShowView(int viewID)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void HideView(int viewID)
+		public override void HideView(int viewID)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void CallbackView(int viewID, Action<IController, IView> callback)
+		public override void CallbackView(int viewID, Action<IController, IView> callback)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void LateUpdateData()
+		public override void LateUpdateData()
 		{
 			throw new NotImplementedException();
 		}

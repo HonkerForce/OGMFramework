@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YFramework
+namespace OGMFramework
 {
 	public class GameManager : MonoBehaviour
 	{

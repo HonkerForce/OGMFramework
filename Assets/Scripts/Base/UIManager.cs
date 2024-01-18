@@ -5,16 +5,16 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace YFramework
+namespace OGMFramework
 {
-    public class UIManager : Manager, IUIManager
+    public class UIManager : Manager, IUIManager, IEventHandler
     {
-        public enum UI_SIGNAL
+        public enum UI_COMMAND
         {
             NONE,
-            SIGNAL1,
-            SIGNAL2,
-            SIGNAL3,
+            COMMAND1,
+            COMMAND2,
+            COMMAND3,
             MAX
         }
 
@@ -46,7 +46,7 @@ namespace YFramework
             public string parentPath;
         }
 
-        protected override ISignalEngine signalEngine { get; } = new SignalEngine();
+        protected override ICommandEngine commandEngine { get; } = new CommandEngine();
 
         private const string uiConfigPath = "Assets/GResources/Config/UI/WindowAsyncCreateConfig.asset";
 
@@ -108,8 +108,8 @@ namespace YFramework
         {
             #region 创建Controller
 
-            controllers?.Add((int)WindowModel.Test, new TestController(signalEngine));
-            controllers?.Add((int)WindowModel.Test1, new TestController1(signalEngine));
+            controllers?.Add((int)WindowModel.Test, new TestController(commandEngine));
+            controllers?.Add((int)WindowModel.Test1, new TestController1(commandEngine));
 
             #endregion
 
@@ -119,6 +119,7 @@ namespace YFramework
             {
                 controller.Value.InitModel();
                 controller.Value.InitInteraction();
+                controller.Value.InitSignal();
             }
 
             #endregion
@@ -126,15 +127,11 @@ namespace YFramework
             return true;
         }
 
-        public override bool InitSignalEngine()
+        public override bool InitCommandEngine()
         {
-            foreach (var controller in controllers)
-            {
-                if (!controller.Value.InitSignal())
-                {
-                    return false;
-                }
-            }
+            commandEngine.RegisterCommand((int)UI_COMMAND.COMMAND1, (i, i1, arg3) => { return true;});
+            commandEngine.RegisterCommand((int)UI_COMMAND.COMMAND2, (i, i1, arg3) => { return true;});
+            commandEngine.RegisterCommand((int)UI_COMMAND.COMMAND3, (i, i1, arg3) => { return true;});
 
             return true;
         }
@@ -159,32 +156,14 @@ namespace YFramework
             return true;
         }
 
-        public override bool ReleaseSignalEngine()
+        public override bool ReleaseCommandEngine()
         {
-            foreach (var controller in controllers)
+            for (UI_COMMAND i = UI_COMMAND.COMMAND1; i < UI_COMMAND.MAX; i++)
             {
-                if (!controller.Value.ReleaseSignal())
-                {
-                    return false;
-                }
+                commandEngine.UnRegisterCommand((int)i);
             }
-
+            
             return true;
-        }
-
-        public override void UpdateProcess()
-        {
-
-        }
-
-        public override void FixedUpdateProcess()
-        {
-
-        }
-
-        public override void LateUpdateProcess()
-        {
-
         }
 
         public bool IsExistWindow(WindowModel winModel)
@@ -333,6 +312,11 @@ namespace YFramework
             }
 
             controller.LateUpdateData();
+        }
+
+        public bool ExecuteEvent(int eventID, int srcType, int srcKey, object args)
+        {
+            return false;
         }
     }
 }

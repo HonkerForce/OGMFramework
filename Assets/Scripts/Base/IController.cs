@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YFramework
+namespace OGMFramework
 {
     // public delegate void ViewCreatedCallback(IController controller, IView createdView);
 

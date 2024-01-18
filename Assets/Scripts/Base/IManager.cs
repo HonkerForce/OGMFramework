@@ -1,19 +1,13 @@
-﻿namespace YFramework
+﻿namespace OGMFramework
 {
     public interface IManager
     {
         bool InitController();
 
-        bool InitSignalEngine();
+        bool InitCommandEngine();
 
         bool ReleaseController();
 
-        bool ReleaseSignalEngine();
-
-        void UpdateProcess();
-
-        void FixedUpdateProcess();
-
-        void LateUpdateProcess();
+        bool ReleaseCommandEngine();
     }
 }

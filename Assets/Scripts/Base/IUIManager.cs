@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YFramework
+namespace OGMFramework
 {
     public interface IUIManager : IManager
     {
