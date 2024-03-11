@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace OGMFramework
 {
-    public class EventEngine : MonoBehaviour, IEventEngine
+    public sealed class EventEngine : SingleMonoBehaviour<EventEngine>, IEventEngine
     {
         public enum EVENT_SRC_TYPE
         {
@@ -60,7 +59,7 @@ namespace OGMFramework
             }
         }
         
-        public virtual void RegisterEvent(int eventID, int srcType, int srcKey, Func<System.Object, bool> callback)
+        public void RegisterEvent(int eventID, int srcType, int srcKey, Func<System.Object, bool> callback)
         {
             UInt64 key = GenericEventKey(eventID, srcType, srcKey);
             if (key == 0)
@@ -79,7 +78,7 @@ namespace OGMFramework
             }
         }
 
-        public virtual void RegisterEvent(int eventID, int srcType, int srcKey, IEventHandler handler)
+        public void RegisterEvent(int eventID, int srcType, int srcKey, IEventHandler handler)
         {
             UInt64 key = GenericEventKey(eventID, srcType, srcKey);
             if (key == 0)
@@ -98,7 +97,7 @@ namespace OGMFramework
             }
         }
 
-        public virtual void UnRegisterEvent(int eventID, int srcType, int srcKey, Func<System.Object, bool> callBack)
+        public void UnRegisterEvent(int eventID, int srcType, int srcKey, Func<System.Object, bool> callBack)
         {
             UInt64 key = GenericEventKey(eventID, srcType, srcKey);
             if (key == 0)
@@ -120,7 +119,7 @@ namespace OGMFramework
             }
         }
 
-        public virtual void UnRegisterEvent(int eventID, int srcType, int srcKey, IEventHandler handler)
+        public void UnRegisterEvent(int eventID, int srcType, int srcKey, IEventHandler handler)
         {
             UInt64 key = GenericEventKey(eventID, srcType, srcKey);
             if (key == 0)
@@ -142,7 +141,7 @@ namespace OGMFramework
             }
         }
 
-        public virtual bool TriggerEvent(int eventID, int srcType, int srcKey, System.Object context)
+        public bool TriggerEvent(int eventID, int srcType, int srcKey, System.Object context)
         {
             if (eventID <= 0 || srcType < 0 || srcKey < 0)
             {
@@ -207,7 +206,7 @@ namespace OGMFramework
             return true;
         }
 
-        public virtual void TriggerDelayEvent(int eventID, int srcType, int srcKey, int delay, object context)
+        public void TriggerDelayEvent(int eventID, int srcType, int srcKey, int delay, object context)
         {
             if (eventID <= 0 || srcType < 0 || srcKey < 0)
             {
@@ -301,7 +300,7 @@ namespace OGMFramework
             return true;
         }
 
-        protected virtual UInt64 GenericEventKey(int eventID, int srcType, int srcKey)
+        protected UInt64 GenericEventKey(int eventID, int srcType, int srcKey)
         {
             UInt64 key = 0;
 

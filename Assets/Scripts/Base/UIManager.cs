@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace OGMFramework
 {
-    public class UIManager : Manager, IUIManager, IEventHandler
+    public class UIManager : Manager, IUIManager, IEventHandler, ISingleton<UIManager>
     {
         public enum UI_COMMAND
         {
@@ -44,6 +45,20 @@ namespace OGMFramework
             public WindowModel winModel;
             public GameObject prefab;
             public string parentPath;
+        }
+        
+        private static UIManager instance = null;
+        public static UIManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new UIManager();
+                }
+
+                return instance;
+            }
         }
 
         protected override ICommandEngine commandEngine { get; } = new CommandEngine();
@@ -228,6 +243,7 @@ namespace OGMFramework
             if (!controller.IsExistView((int)config.winModel) || !controller.IsExistView((int)winModel))
             {
                 // ZSpawnPool.Instance.StartCoroutine(AsyncCreateWindow(config, (int)winModel, callback));
+                EventEngine.Instance.StartCoroutine(AsyncCreateWindow(config, (int)winModel, callback));
                 return;
             }
 
