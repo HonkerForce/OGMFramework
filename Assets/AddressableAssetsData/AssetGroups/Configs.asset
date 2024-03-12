@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: Configs
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: Configs
   m_Data:
     m_SerializedData: []
   m_GUID: 245de942e35ced341a9e162488472169
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: c4e89a69d71aa8546a35e11e357f3dca
+    m_Address: Assets/Configs
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 00bba85ad874e2643be97c041be150b2, type: 2}
   m_SchemaSet:

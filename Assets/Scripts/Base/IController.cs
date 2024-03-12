@@ -18,7 +18,7 @@ namespace OGMFramework
 
         bool ReleaseInteraction();
 
-        UnRegisterViewProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "");
+        LoadViewDataProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "");
 
         void DropView(int viewID, bool isRoot);
 

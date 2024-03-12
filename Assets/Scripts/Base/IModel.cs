@@ -4,13 +4,13 @@ namespace OGMFramework
 {
     public interface IModel
     {
-        bool InitModelData();
+        bool Init(ISignalEngine signalEngine);
         
         bool ReleaseModelData();
 
         bool IsExistLateUpdate();
 
-        void PushLateUpdate(ModelDataChanged callback, System.Object paramObj);
+        void PushLateUpdate(ModelDataChanged callback);
 
         void TriggerLateUpdate();
 

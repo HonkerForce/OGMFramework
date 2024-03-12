@@ -6,7 +6,7 @@ namespace OGMFramework
     {
         public abstract int viewID { get; set; }
 
-        public virtual bool InitHelper(IHelper helper)
+        public virtual bool InitView(IHelper helper)
         {
             return true;
         }

@@ -39,7 +39,7 @@ namespace OGMFramework
 			throw new NotImplementedException();
 		}
 
-		public override UnRegisterViewProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "")
+		public override LoadViewDataProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "")
 		{
 			throw new NotImplementedException();
 		}

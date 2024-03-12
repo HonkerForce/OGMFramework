@@ -4,7 +4,7 @@
     {
         int viewID { get; set; }
         
-        bool InitHelper(IHelper helper);
+        bool InitView(IHelper helper);
 
         bool IsCreateSuc();
         

@@ -5,17 +5,11 @@ namespace OGMFramework
 {
     public abstract class ModelBase : IModel
     {
-        protected struct LateUpdateInfo
-        {
-            public ModelDataChanged callback;
-            public System.Object paramObj;
-        }
-        
-        // protected Dictionary<string, IModelData> modelDatas = new Dictionary<string, IModelData>();
+        protected ISignalEngine signalEngine;
 
-        protected HashSet<LateUpdateInfo> lateCallbacks = new();
+        protected HashSet<ModelDataChanged> lateCallbacks = new();
 
-        public abstract bool InitModelData();
+        public abstract bool Init(ISignalEngine signalEngine);
         
         public abstract bool ReleaseModelData();
         
@@ -27,7 +21,7 @@ namespace OGMFramework
         
         public abstract bool IsExistLateUpdate();
         
-        public abstract void PushLateUpdate(ModelDataChanged callback, object paramObj);
+        public abstract void PushLateUpdate(ModelDataChanged callback);
 
         public abstract void TriggerLateUpdate();
         

@@ -1,24 +1,22 @@
 ﻿namespace OGMFramework
 {
-    public class UnRegisterViewProxy
+    public class LoadViewDataProxy
     {
-        private IController controller;
+        private IHelper helper;
         private View view;
-        private bool isRoot;
 
-        public UnRegisterViewProxy(IController controller, View view, bool isRoot)
+        public LoadViewDataProxy(IHelper helper, View view)
         {
-            this.controller = controller;
+            this.helper = helper;
             this.view = view;
-            this.isRoot = isRoot;
         }
 
-        public void UnRegister()
+        public void LoadViewData()
         {
-            controller?.DropView(view.viewID, isRoot);
+            helper.TriggerInteraction((int)Common_Interaction.LOAD_VIEW_DATA, view.viewID);
         }
 
-        public void UnRegisterViewWhenViewDestroyed()
+        public void LoadViewDataWhenViewActive()
         {
             if (view == null)
             {
@@ -29,8 +27,8 @@
             if (trigger == null)
             {
                 trigger = view.gameObject?.AddComponent<ViewUnRegisterTrigger>();
+                trigger?.SetLoadViewDataProxy(this);
             }
-            trigger?.SetUnRegisterProxy(this);
         }
     }
 }

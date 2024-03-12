@@ -25,7 +25,7 @@ namespace OGMFramework
             }
         }
 
-        public override bool InitHelper(IHelper helper)
+        public override bool InitView(IHelper helper)
         {
             if (helper == null)
             {

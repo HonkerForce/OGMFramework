@@ -2,11 +2,17 @@
 {
     public class TestModel1 : Model
     {
-        public ModelRefData<object> refData;
+        // public ModelRefData<object> refData;
+        public ModelValueData<float> fData = new();
 
-        public override bool InitModelData()
+        public override bool Init(ISignalEngine signalEngine)
         {
-            refData.Init(this);
+            this.signalEngine = signalEngine;
+            // refData.Init(this);
+            fData.Init(this).onChanged += () =>
+            {
+
+            };
 
             return true;
         }

@@ -218,7 +218,7 @@ namespace OGMFramework
             }
         }
 
-        public void AsyncCreateWindow(WindowModel winModel, Action<IController, IView> callback)
+        public void OpenWindow(WindowModel winModel, Action<IController, IView> callback)
         {
             //倒计时五秒退出到选角或者登录，不可以做任何操作/
             // if ((GlobalGame.Instance.GameClient.IsRequestEnterState(GameState.SelectActor) ||
@@ -271,24 +271,23 @@ namespace OGMFramework
             // if (!controller.IsExistView((int)config.winModel))
             // {
             //     winAssetReq = AssetManager.LoadAsset<GameObject>(config.prefab.path);
-            // }
-            //
-            // while (!winAssetReq.IsDone)
-            // {
-            //     yield return winAssetReq;
-            // }
-            //
-            // if (winAssetReq.Result != null)
-            // {
-            //     GameObject prefabObj = GameObject.Instantiate(winAssetReq.Result);
-            //     UIView view = prefabObj.GetComponent<UIView>();
-            //     if (prefabObj != null && winContainer != null && view != null)
+            //     while (!winAssetReq.IsDone)
             //     {
-            //         prefabObj.transform.SetParent(winContainer.transform);
-            //         controller.ControlView((int)config.winModel, view, true).UnRegisterViewWhenViewDestroyed();
+            //         yield return winAssetReq;
             //     }
             //
-            //     winAssetReq = default;
+            //     if (winAssetReq.Result != null)
+            //     {
+            //         GameObject prefabObj = GameObject.Instantiate(winAssetReq.Result);
+            //         UIView view = prefabObj.GetComponent<UIView>();
+            //         if (prefabObj != null && winContainer != null && view != null)
+            //         {
+            //             prefabObj.transform.SetParent(winContainer.transform);
+            //             controller.ControlView((int)config.winModel, view, true).UnRegisterViewWhenViewDestroyed();
+            //         }
+            //
+            //         winAssetReq = default;
+            //     }
             // }
 
             if (showViewID == (int)config.winModel)
@@ -328,6 +327,21 @@ namespace OGMFramework
             }
 
             controller.LateUpdateData();
+        }
+
+        public void CloseWindow(WindowModel winModel)
+        {
+            if (!winConfigs.TryGetValue(winModel, out var config))
+            {
+                return;
+            }
+
+            if (!controllers.TryGetValue((int)winModel, out var controller))
+            {
+                return;
+            }
+            
+            controller.DropView((int)winModel, config.winModel == winModel);
         }
 
         public bool ExecuteEvent(int eventID, int srcType, int srcKey, object args)

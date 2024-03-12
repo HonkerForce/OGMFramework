@@ -10,6 +10,6 @@ namespace OGMFramework
 
         void ChangeSceneHideViews();
 
-        void AsyncCreateWindow(WindowModel winModel, Action<IController, IView> callback);
+        void OpenWindow(WindowModel winModel, Action<IController, IView> callback);
     }
 }

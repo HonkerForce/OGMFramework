@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace OGMFramework
 {
+    public enum Common_Interaction
+    {
+        NONE = 0,
+        LOAD_VIEW_DATA,			// 加载view数据
+        MAX
+    }
+    
     public abstract class Controller<ModelClass> : IController where ModelClass : ModelBase, new()
     {
         protected Dictionary<int, IView> allViews = new Dictionary<int, IView>();
@@ -35,7 +42,7 @@ namespace OGMFramework
         
         public abstract bool ReleaseInteraction();
 
-        public virtual UnRegisterViewProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "")
+        public virtual LoadViewDataProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "")
         {
             if (viewID <= 0 || view == null)
             {
@@ -43,7 +50,7 @@ namespace OGMFramework
             }
 
             view.viewID = viewID;
-            view.InitHelper(interactionHelper);
+            view.InitView(interactionHelper);
             
 
             if (!allViews.ContainsKey(viewID))
@@ -90,7 +97,7 @@ namespace OGMFramework
             (view as UIView)?.ResetCanvasSorting(allViews.Count);
             (view as UIView)?.ResetOrderLayerEventEx();
 
-            return new UnRegisterViewProxy(this as IController, view as View, isRoot);
+            return new LoadViewDataProxy(interactionHelper, view as View);
         }
 
         public virtual void DropView(int viewID, bool isRoot)
@@ -104,6 +111,7 @@ namespace OGMFramework
             {
                 foreach (var view in allViews)
                 {
+                    view.Value.Hide();
                     view.Value.Destroy();
                 }
 
@@ -114,6 +122,7 @@ namespace OGMFramework
             
             if (allViews.ContainsKey(viewID))
             {
+                allViews[viewID].Hide();
                 allViews[viewID].Destroy();
                 allViews.Remove(viewID);
             }

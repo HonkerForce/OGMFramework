@@ -13,30 +13,28 @@ namespace OGMFramework
             MAX
         }
         
-        protected Dictionary<UInt64, Func<System.Object, bool>> eventDelegates = new();
+        private Dictionary<UInt64, Func<System.Object, bool>> eventDelegates = new();
 
-        protected Dictionary<UInt64, List<IEventHandler>> eventHandlers = new();
+        private Dictionary<UInt64, List<IEventHandler>> eventHandlers = new();
 
-        protected struct EventNode
+        private struct EventNode
         {
             public int eventID;
             public int srcType;
             public int srcKey;
-            public int delay;
-            public int time;
+            public int delay;       // 单位：毫秒
+            public int time;        // 单位：秒
             public object args;
         }
 
-        protected List<EventNode> delayEvents = new();
+        private List<EventNode> delayEvents = new();
 
         void Update()
         {
-            var realtime = Time.realtimeSinceStartup;
-            var nodes = delayEvents.GetEnumerator();
-            int i = 0;
-            while (nodes.MoveNext())
+            var realtime = (int)(Time.realtimeSinceStartup * 1000);
+            for (int i = delayEvents.Count - 1; i >= 0; i--)
             {
-                var node = nodes.Current;
+                var node = delayEvents[i];
                 if (node.time + node.delay >= realtime)
                 {
                     var key = GenericEventKey(node.eventID, node.srcType, node.srcKey);
@@ -54,8 +52,6 @@ namespace OGMFramework
 
                     delayEvents.RemoveAt(i);
                 }
-
-                i++;
             }
         }
         
@@ -258,7 +254,7 @@ namespace OGMFramework
             }
         }
 
-        protected bool TriggerDelegate(UInt64 key, System.Object context)
+        private bool TriggerDelegate(UInt64 key, System.Object context)
         {
             var delegates = eventDelegates[key]?.GetInvocationList();
             foreach (Func<System.Object, bool> dele in delegates)
@@ -272,7 +268,7 @@ namespace OGMFramework
             return true;
         }
 
-        protected bool TriggerHandler(int eventID, int srcType, int srcKey, System.Object context)
+        private bool TriggerHandler(int eventID, int srcType, int srcKey, System.Object context)
         {
             UInt64 key = GenericEventKey(eventID, srcType, srcKey);
             if (key == 0)
@@ -300,7 +296,7 @@ namespace OGMFramework
             return true;
         }
 
-        protected UInt64 GenericEventKey(int eventID, int srcType, int srcKey)
+        private UInt64 GenericEventKey(int eventID, int srcType, int srcKey)
         {
             UInt64 key = 0;
 

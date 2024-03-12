@@ -5,7 +5,7 @@ namespace OGMFramework
 {
     public class ReadOnlyData<T> where T : class
     {
-        public readonly System.Object data;
+        public readonly T data;
 
         public ReadOnlyData(T obj)
         {
@@ -18,51 +18,51 @@ namespace OGMFramework
         }
     }
 
-    public class ModelRefData<T> : IModelData where T : class
-    {
-        protected T value;
-        public ReadOnlyData<T> Value => value;
-        public IModel model { get; protected set; }
-
-        public ModelRefData()
-        {
-            value = default;
-        }
-
-        public ModelRefData(T defValue)
-        {
-            value = defValue;
-        }
-
-        protected ModelDataChanged valueChangedCallback = null;
-        public ModelDataChanged callback
-        {
-            get => valueChangedCallback;
-            set => valueChangedCallback = value;
-        }
-
-        public virtual void Init(IModel model)
-        {
-            this.model = model;
-        }
-
-        public virtual void UpdateData(System.Object value, bool isLate)
-        {
-            if (!value.Equals(this.value))
-            {
-                this.value = (T)value;
-            }
-
-            if (!isLate)
-            {
-                callback?.Invoke(value);
-            }
-            else
-            {
-                model?.PushLateUpdate(callback, null);
-            }
-        }
-    }
+    // public class ModelRefData<T> : IModelData where T : class, new()
+    // {
+    //     protected T value;
+    //     public T Value => value;
+    //     public IModel model { get; protected set; }
+    //
+    //     public ModelRefData()
+    //     {
+    //         value = default;
+    //     }
+    //
+    //     public ModelRefData(in T defValue)
+    //     {
+    //         value = defValue;
+    //     }
+    //
+    //     protected ModelDataChanged valueChangedCallback = null;
+    //     public ModelDataChanged callback
+    //     {
+    //         get => valueChangedCallback;
+    //         set => valueChangedCallback = value;
+    //     }
+    //
+    //     public virtual void Init(IModel model)
+    //     {
+    //         this.model = model;
+    //     }
+    //
+    //     public virtual void UpdateData(System.Object value, bool isLate)
+    //     {
+    //         if (!value.Equals(this.value))
+    //         {
+    //             this.value = (T)value;
+    //         }
+    //     
+    //         if (!isLate)
+    //         {
+    //             callback?.Invoke();
+    //         }
+    //         else
+    //         {
+    //             model?.PushLateUpdate(callback);
+    //         }
+    //     }
+    // }
 
     public class ModelValueData<T> : IModelData where T : struct
     {
@@ -71,7 +71,7 @@ namespace OGMFramework
         public IModel model { get; protected set; }
         protected ModelDataChanged valueChangedCallback = null;
 
-        public ModelDataChanged callback
+        public ModelDataChanged onChanged
         {
             get => valueChangedCallback;
             set => valueChangedCallback = value;
@@ -87,9 +87,10 @@ namespace OGMFramework
             Value = value;
         }
 
-        public virtual void Init(IModel model)
+        public virtual IModelData Init(IModel model)
         {
             this.model = model;
+            return this;
         }
 
         public virtual void UpdateData(System.Object value, bool isLate)
@@ -98,11 +99,11 @@ namespace OGMFramework
 
             if (!isLate)
             {
-                callback?.Invoke(value);
+                onChanged?.Invoke();
             }
             else
             {
-                model?.PushLateUpdate(callback, null);
+                model?.PushLateUpdate(onChanged);
             }
         }
     }

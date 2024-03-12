@@ -4,21 +4,16 @@ namespace OGMFramework
 {
     public class ViewUnRegisterTrigger : MonoBehaviour
     {
-        private UnRegisterViewProxy unRegisterProxy;
+        private LoadViewDataProxy _loadDataProxy;
 
-        public void SetUnRegisterProxy(UnRegisterViewProxy proxy)
+        public void SetLoadViewDataProxy(LoadViewDataProxy dataProxy)
         {
-            unRegisterProxy = proxy;
+            _loadDataProxy = dataProxy;
         }
 
-        private void UnRegister()
+        void OnEnable()
         {
-            unRegisterProxy?.UnRegister();
-        }
-
-        void OnDestroy()
-        {
-            unRegisterProxy?.UnRegister();
+            _loadDataProxy?.LoadViewData();
         }
     }
 }

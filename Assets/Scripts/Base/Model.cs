@@ -40,13 +40,9 @@ namespace OGMFramework
         //     }
         // }
 
-        public sealed override void PushLateUpdate(ModelDataChanged callback, System.Object paramObj)
+        public sealed override void PushLateUpdate(ModelDataChanged callback)
         {
-            LateUpdateInfo info;
-            info.callback = callback;
-            info.paramObj = paramObj;
-    
-            lateCallbacks?.Add(info);
+            lateCallbacks?.Add(callback);
         }
 
         public sealed override bool IsExistLateUpdate()
@@ -61,9 +57,9 @@ namespace OGMFramework
 
         public sealed override void TriggerLateUpdate()
         {
-            foreach (var lateInfo in lateCallbacks)
+            foreach (var callback in lateCallbacks)
             {
-                lateInfo.callback?.Invoke(lateInfo.paramObj);
+                callback?.Invoke();
             }
 
             lateCallbacks.Clear();
