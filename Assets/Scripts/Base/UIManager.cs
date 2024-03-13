@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace OGMFramework
 {
-    public class UIManager : Manager, IUIManager, IEventHandler, ISingleton<UIManager>
+    public class UIManager : Manager, IUIManager, IEventHandler
     {
         public enum UI_COMMAND
         {
@@ -47,19 +47,19 @@ namespace OGMFramework
             public string parentPath;
         }
         
-        private static UIManager instance = null;
-        public static UIManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new UIManager();
-                }
-
-                return instance;
-            }
-        }
+        // private static UIManager instance = null;
+        // public static UIManager Instance
+        // {
+        //     get
+        //     {
+        //         if (instance == null)
+        //         {
+        //             instance = new UIManager();
+        //         }
+        //
+        //         return instance;
+        //     }
+        // }
 
         protected override ICommandEngine commandEngine { get; } = new CommandEngine();
 
@@ -67,6 +67,11 @@ namespace OGMFramework
 
         private Dictionary<WindowModel, WindowModelConfig> winConfigs = new();
         private GameObject winContainer = null;
+
+        public override bool Init()
+        {
+            return base.Init() & InitConfig();
+        }
 
         public bool InitConfig()
         {

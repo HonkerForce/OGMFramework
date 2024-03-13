@@ -2,12 +2,8 @@
 {
     public interface IManager
     {
-        bool InitController();
+        bool Init();
 
-        bool InitCommandEngine();
-
-        bool ReleaseController();
-
-        bool ReleaseCommandEngine();
+        bool Release();
     }
 }

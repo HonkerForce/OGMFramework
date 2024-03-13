@@ -9,6 +9,16 @@ namespace OGMFramework
 
         protected abstract ICommandEngine commandEngine { get; }
 
+        public virtual bool Init()
+        {
+            return InitController() & InitCommandEngine();
+        }
+
+        public virtual bool Release()
+        {
+            return ReleaseController() & ReleaseCommandEngine();
+        }
+
         public abstract bool InitController();
         
         public abstract bool InitCommandEngine();
