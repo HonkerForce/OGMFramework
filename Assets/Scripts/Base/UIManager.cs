@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace OGMFramework
 {
-    public class UIManager : Manager, IUIManager, IEventHandler
+    public class UIManager : Manager, IUIManager, IEventHandler, ISingleton<UIManager>
     {
         public enum UI_COMMAND
         {
@@ -47,19 +46,19 @@ namespace OGMFramework
             public string parentPath;
         }
         
-        // private static UIManager instance = null;
-        // public static UIManager Instance
-        // {
-        //     get
-        //     {
-        //         if (instance == null)
-        //         {
-        //             instance = new UIManager();
-        //         }
-        //
-        //         return instance;
-        //     }
-        // }
+        private static UIManager instance = null;
+        public static UIManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new UIManager();
+                }
+        
+                return instance;
+            }
+        }
 
         protected override ICommandEngine commandEngine { get; } = new CommandEngine();
 

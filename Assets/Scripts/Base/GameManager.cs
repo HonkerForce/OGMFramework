@@ -12,7 +12,7 @@ namespace OGMFramework
 			MAX
 		}
 
-		public IManager[] managers = new IManager[(int)MANAGER_TYPE.MAX]
+		private IManager[] managers = new IManager[(int)MANAGER_TYPE.MAX]
 		{
 			new UIManager(),			// MANAGER_TYPE.UI
 		};
