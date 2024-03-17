@@ -30,6 +30,16 @@ namespace OGMFramework
             this.commandEngine = commandEngine;
         }
 
+        public virtual bool Init()
+        {
+            return InitSignal() & InitModel() & InitInteraction();
+        }
+
+        public virtual bool Release()
+        {
+            return ReleaseSignal() & ReleaseModel() & ReleaseInteraction();
+        }
+
         public abstract bool InitSignal();
         
         public abstract bool InitModel();

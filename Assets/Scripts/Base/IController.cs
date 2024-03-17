@@ -6,17 +6,9 @@ namespace OGMFramework
 
     public interface IController
     {
-        bool InitSignal();
+        bool Init();
 
-        bool InitModel();
-
-        bool InitInteraction();
-
-        bool ReleaseSignal();
-
-        bool ReleaseModel();
-
-        bool ReleaseInteraction();
+        bool Release();
 
         LoadViewDataProxy ControlView(int viewID, IView view, bool isRoot, string parentPath = "");
 

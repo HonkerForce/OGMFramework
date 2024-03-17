@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace OGMFramework
 {
-    public class UIManager : Manager, IUIManager, IEventHandler, ISingleton<UIManager>
+    public class UIManager : Manager<UIManager>, IUIManager, IEventHandler
     {
         public enum UI_COMMAND
         {
@@ -45,20 +45,6 @@ namespace OGMFramework
             public GameObject prefab;
             public string parentPath;
         }
-        
-        private static UIManager instance = null;
-        public static UIManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new UIManager();
-                }
-        
-                return instance;
-            }
-        }
 
         protected override ICommandEngine commandEngine { get; } = new CommandEngine();
 
@@ -69,6 +55,8 @@ namespace OGMFramework
 
         public override bool Init()
         {
+            GameManager.RegisterMonoEvent(Update, FixedUpdate, LateUpdate);
+            
             return base.Init() & InitConfig();
         }
 
@@ -123,7 +111,7 @@ namespace OGMFramework
             return true;
         }
 
-        public override bool InitController()
+        protected override bool InitController()
         {
             #region 创建Controller
 
@@ -136,9 +124,7 @@ namespace OGMFramework
 
             foreach (var controller in controllers)
             {
-                controller.Value.InitModel();
-                controller.Value.InitInteraction();
-                controller.Value.InitSignal();
+                controller.Value.Init();
             }
 
             #endregion
@@ -146,7 +132,7 @@ namespace OGMFramework
             return true;
         }
 
-        public override bool InitCommandEngine()
+        protected override bool InitCommandEngine()
         {
             commandEngine.RegisterCommand((int)UI_COMMAND.COMMAND1, (i, i1, arg3) => { return true;});
             commandEngine.RegisterCommand((int)UI_COMMAND.COMMAND2, (i, i1, arg3) => { return true;});
@@ -155,19 +141,11 @@ namespace OGMFramework
             return true;
         }
 
-        public override bool ReleaseController()
+        protected override bool ReleaseController()
         {
             foreach (var controller in controllers)
             {
-                if (!controller.Value.ReleaseInteraction())
-                {
-                    return false;
-                }
-
-                if (!controller.Value.ReleaseModel())
-                {
-                    return false;
-                }
+                controller.Value.Release();
             }
 
             controllers?.Clear();
@@ -175,7 +153,7 @@ namespace OGMFramework
             return true;
         }
 
-        public override bool ReleaseCommandEngine()
+        protected override bool ReleaseCommandEngine()
         {
             for (UI_COMMAND i = UI_COMMAND.COMMAND1; i < UI_COMMAND.MAX; i++)
             {
@@ -351,6 +329,21 @@ namespace OGMFramework
         public bool ExecuteEvent(int eventID, int srcType, int srcKey, object args)
         {
             return false;
+        }
+
+        private void Update()
+        {
+            
+        }
+
+        private void LateUpdate()
+        {
+            
+        }
+
+        private void FixedUpdate()
+        {
+            
         }
     }
 }

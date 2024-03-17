@@ -2,12 +2,7 @@
 
 namespace OGMFramework
 {
-    public interface ISingleton<T>
-    {
-        static T Instance { get; }
-    }
-
-    public class Singleton<T> : ISingleton<T>
+    public class Singleton<T>
         where T : class, new()
     {
         private static T instance = null;
@@ -26,7 +21,7 @@ namespace OGMFramework
         }
     }
 
-    public class SingleMonoBehaviour<T> : MonoBehaviour, ISingleton<T> 
+    public class SingleMonoBehaviour<T> : MonoBehaviour
         where T : MonoBehaviour
     {
         private static T instance = null;

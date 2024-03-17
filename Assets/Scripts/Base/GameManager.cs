@@ -16,6 +16,10 @@ namespace OGMFramework
 		{
 			new UIManager(),			// MANAGER_TYPE.UI
 		};
+
+		private static Action update;
+		private static Action fixedUpdate;
+		private static Action lateUpdate;
 		
 		private void InitGame()
 		{
@@ -26,6 +30,24 @@ namespace OGMFramework
 				{
 					print(Enum.GetName(typeof(MANAGER_TYPE), i) + "(Manager) CreateInit Fail!");
 				}
+			}
+		}
+
+		public static void RegisterMonoEvent(Action update, Action fixedUpdate, Action lateUpdate)
+		{
+			if (update != null)
+			{
+				GameManager.update += update;
+			}
+
+			if (fixedUpdate != null)
+			{
+				GameManager.fixedUpdate += fixedUpdate;
+			}
+
+			if (lateUpdate != null)
+			{
+				GameManager.lateUpdate += lateUpdate;
 			}
 		}
 
@@ -46,17 +68,17 @@ namespace OGMFramework
 
 		void FixedUpdate()
 		{
-			
+			GameManager.fixedUpdate();
 		}
 
 		void Update()
 		{
-			
+			GameManager.update();
 		}
 
 		void LateUpdate()
 		{
-			
+			GameManager.lateUpdate();
 		}
 
 		void OnDisable()

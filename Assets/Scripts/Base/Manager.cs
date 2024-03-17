@@ -3,8 +3,23 @@ using System.Collections.Generic;
 
 namespace OGMFramework
 {
-    public abstract class Manager : IManager
+    public abstract class Manager<T> : IManager
+        where T : IManager, new()
     {
+        private static T instance;
+        public static T Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new T();
+                }
+        
+                return instance;
+            }
+        }
+
         protected Dictionary<int, IController> controllers = new();
 
         protected abstract ICommandEngine commandEngine { get; }
@@ -19,13 +34,12 @@ namespace OGMFramework
             return ReleaseController() & ReleaseCommandEngine();
         }
 
-        public abstract bool InitController();
+        protected abstract bool InitController();
         
-        public abstract bool InitCommandEngine();
+        protected abstract bool InitCommandEngine();
         
-        public abstract bool ReleaseController();
+        protected abstract bool ReleaseController();
         
-        public abstract bool ReleaseCommandEngine();
-
+        protected abstract bool ReleaseCommandEngine();
     }
 }
