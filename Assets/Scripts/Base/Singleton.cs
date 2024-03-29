@@ -19,6 +19,9 @@ namespace OGMFramework
                 return instance;
             }
         }
+
+        private Singleton() { }
+        
     }
 
     public class SingleMonoBehaviour<T> : MonoBehaviour
