@@ -19,7 +19,9 @@ namespace OGMFramework
                 return instance;
             }
         }
-
+        
+        protected Manager() { }
+        
         protected Dictionary<int, IController> controllers = new();
 
         protected abstract ICommandEngine commandEngine { get; }

@@ -14,7 +14,7 @@ namespace OGMFramework
 
 		private IManager[] managers = new IManager[(int)MANAGER_TYPE.MAX]
 		{
-			new UIManager(),			// MANAGER_TYPE.UI
+			UIManager.Instance,			// MANAGER_TYPE.UI
 		};
 
 		private static Action update;
