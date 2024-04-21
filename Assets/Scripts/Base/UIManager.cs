@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace OGMFramework
 {
-    public class UIManager : Manager<UIManager>, IUIManager, IEventHandler
+    public class UIManager : Manager<UIManager>, IUIManager, ISingleton<UIManager>, IEventHandler
     {
         public enum UI_COMMAND
         {

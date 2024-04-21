@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace OGMFramework
 {
     public abstract class Manager<T> : IManager
-        where T : IManager, new()
+        where T : IManager, ISingleton<T>, new()
     {
         private static T instance;
         public static T Instance
